@@ -1,0 +1,9 @@
+{
+  "main": "app.mjs",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "scripts": {
+    "dev": "node app.mjs"
+  }
+}
