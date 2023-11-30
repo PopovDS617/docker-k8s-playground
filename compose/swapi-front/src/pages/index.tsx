@@ -3,7 +3,9 @@ import type { GetServerSideProps, GetServerSidePropsContext } from 'next';
 
 import { BASE_URL } from '@/shared/constants';
 
-export default function Home() {
+export default function Home(props) {
+  console.log(props);
+
   return (
     <div className="h-screen">
       <main className="flex h-full items-center justify-center">
@@ -15,10 +17,11 @@ export default function Home() {
 
 export const getServerSideProps: GetServerSideProps = async (_context: GetServerSidePropsContext) => {
   try {
-    const { data } = await axios.get(`${BASE_URL}/starships`);
+    const data = await axios.get(`http://backend:80/starships`);
+    console.log(data);
 
     return {
-      props: { starships: data },
+      props: { starships: { hello: 'there' } || '' },
     };
   } catch (e) {
     console.error(e);

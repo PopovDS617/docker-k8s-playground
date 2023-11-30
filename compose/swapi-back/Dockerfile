@@ -6,7 +6,7 @@ COPY package.json .
 
 RUN npm install
 
-ENV PORT 8000
+# ENV PORT 8000
 
 COPY . .
 

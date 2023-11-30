@@ -1,0 +1,53 @@
+version: "3.8"
+services:
+  mongodb:
+    image: "mongo"
+    volumes:
+      - data:/data/db
+    # environment:
+    # MONGO_INITDB_ROOT_USERNAME: root
+    # MONGO_INITDB_ROOT_PASSWORD: password123
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
+  backend:
+    build: ./swapi-back
+    ports:
+      - "80:80"
+    volumes:
+      - logs:/app/logs
+      - ./swapi-back:/app
+      - /app/node_modules
+    environment:
+      - DB_HOST=mongodb
+      - DB_USER=root
+      - DB_PASSWORD=password123
+      - DB_NAME=my_db
+      - DB_PORT=27017
+      - PORT=80
+    depends_on:
+      - mongodb
+
+  frontend:
+    build: ./swapi-front
+    ports:
+      - "3000:3000"
+    environment:
+      - BASE_URL=http://backend:80
+      - NODE_ENV=development
+    depends_on:
+      - backend
+    volumes:
+      - ./swapi-front:/app
+    stdin_open: true
+    tty: true
+
+volumes:
+  data:
+  logs:
